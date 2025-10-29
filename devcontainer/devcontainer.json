@@ -1,0 +1,82 @@
+{
+  "name": "cicsdev_326",
+  "image": "timdrichards/cicsdev_326:latest",
+
+  // Bind the host project into the devcontainer under /workspace/<folder>
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/${localWorkspaceFolderBasename},type=bind",
+  "workspaceFolder": "/workspace/${localWorkspaceFolderBasename}",
+
+  // True Docker-in-Docker, the inner dockerd runs inside this container
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "moby": false
+    }
+  },
+
+  // Needed for DinD
+  "runArgs": [
+    "--init",
+    "--privileged",
+    "--name",
+    "dev-${localWorkspaceFolderBasename}"
+  ],
+
+  "remoteUser": "vscode",
+
+  // IMPORTANT: use a named volume for the inner /var/lib/docker.
+  // DO NOT mount the host /var/run/docker.sock here.
+  "mounts": [
+    "source=dind-var-lib-docker,target=/var/lib/docker,type=volume"
+  ],
+
+  "containerEnv": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PIP_DISABLE_PIP_VERSION_CHECK": "1",
+    "DOCKER_BUILDKIT": "1",
+    "COMPOSE_DOCKER_CLI_BUILD": "1"
+  },
+
+  "remoteEnv": {
+    "VIRTUAL_ENV": "/usr/local",
+    "PATH": "${containerWorkspaceFolder}/.devcontainer/tasks:/usr/local/bin:${containerEnv:PATH}",
+    "CONTAINER_BASE_NAME": "vsc-${containerWorkspaceFolderBasename}"
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.black-formatter",
+        "ms-python.isort",
+        "ms-azuretools.vscode-docker",
+        "ms-toolsai.jupyter",
+        "eamodio.gitlens",
+        "bierner.markdown-mermaid",
+        "ReprEng.csv",
+        "ritwickdey.LiveServer",
+        "Redis.redis-for-vscode",
+        "humao.rest-client"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.linting.flake8Enabled": true,
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.organizeImports": "always"
+        }
+      }
+    }
+  },
+
+  "forwardPorts": [5432, 6379, 9000, 9001, 15672],
+
+  "hostRequirements": {
+    "cpus": 2,
+    "memory": "4"
+  },
+
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y postgresql-client || true",
+
+  "postStartCommand": "bash .devcontainer/scripts/set-prompt.sh || true; bash .devcontainer/scripts/services-up.sh > .devcontainer/services-up.log 2>&1 || true"
+}

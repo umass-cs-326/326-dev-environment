@@ -1,0 +1,9 @@
+Bringing up services: postgres redis
+ Container dev_pg  Starting
+ Container dev_redis  Starting
+ Container dev_pg  Started
+ Container dev_redis  Started
+Could not determine devcontainer ID; skipping network attachment.
+NAME        IMAGE            COMMAND                  SERVICE    CREATED      STATUS                                     PORTS
+dev_pg      postgres:16      "docker-entrypoint.s…"   postgres   5 days ago   Up Less than a second (health: starting)   5432/tcp
+dev_redis   redis:7-alpine   "docker-entrypoint.s…"   redis      5 days ago   Up Less than a second (health: starting)   6379/tcp
