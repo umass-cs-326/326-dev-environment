@@ -1,0 +1,11 @@
+<!-- templates/fragments/book_item.html -->
+<!-- TODO: Add HTMX attributes for deletion -->
+<div
+  class="flex items-center justify-between p-4 border-b border-gray-200 hover:bg-gray-50"
+>
+  <div>
+    <h3 class="font-semibold text-gray-800">{{ book.title }}</h3>
+    <p class="text-sm text-gray-600">by {{ book.author }}</p>
+  </div>
+  <button class="text-red-600 hover:text-red-800 font-medium">Delete</button>
+</div>

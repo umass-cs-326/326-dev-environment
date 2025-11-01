@@ -1,0 +1,73 @@
+<!-- templates/dashboard.html -->
+{% extends "base.html" %} {% block title %}Dashboard{% endblock %} {% block
+content %}
+<div class="min-h-screen bg-gray-50">
+  <!-- Navigation -->
+  <nav class="bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex items-center">
+          <h1 class="text-2xl font-bold text-gray-800">📚 My Library</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-gray-700">Welcome, {{ user.name }}</span>
+          <form method="post" action="/logout">
+            <button
+              type="submit"
+              class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+            >
+              Logout
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Add Book Form -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+      <h2 class="text-xl font-bold text-gray-800 mb-4">Add New Book</h2>
+
+      <!-- TODO: Add HTMX attributes to form -->
+      <form class="flex gap-4">
+        <input
+          type="text"
+          name="title"
+          placeholder="Book Title"
+          required
+          class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+        />
+        <input
+          type="text"
+          name="author"
+          placeholder="Author"
+          required
+          class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+        />
+        <button
+          type="submit"
+          class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-200"
+        >
+          Add Book
+        </button>
+      </form>
+    </div>
+
+    <!-- Books List -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-xl font-bold text-gray-800 mb-4">Your Books</h2>
+
+      <!-- TODO: Add HTMX target for new books -->
+      <div>
+        {% for book in books %} {% include 'fragments/book_item.html' %} {%
+        endfor %} {% if not books %}
+        <p class="text-gray-500 text-center py-8">
+          No books yet. Add your first book above!
+        </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
