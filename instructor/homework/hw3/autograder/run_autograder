@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Ensure dev_pg resolves inside the container
+echo "127.0.0.1 dev_pg" | tee -a /etc/hosts >/dev/null
+echo "::1 dev_pg" | tee -a /etc/hosts >/dev/null || true
+
+# Start PostgreSQL
+/autograder/source/start_postgres.sh
+
+# Reset database for clean testing environment
+PGPASSWORD=app psql -h localhost -U app -d postgres -c "DROP DATABASE IF EXISTS db;"
+PGPASSWORD=app psql -h localhost -U app -d postgres -c "CREATE DATABASE db OWNER app;"
+
+# Copy submission files to autograder directory
+cp -rf /autograder/submission/* /autograder/source/
+
+# Run the autograder tests
+cd /autograder
+python3 /autograder/source/run_tests.py
+
+# Ensure results file exists
+if [ ! -f /autograder/results/results.json ]; then
+    echo '{"score": 0, "output": "No results generated"}' > /autograder/results/results.json
+fi
