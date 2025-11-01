@@ -1,0 +1,72 @@
+@host = http://localhost:8000
+
+# We will use this later for authentication
+@token = AN_EXAMPLE_TOKEN
+
+### Reset Database
+GET {{host}}/api/reset
+
+### Create user: John Doe
+# @name user
+POST {{host}}/api/user/register
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "jdoe@umass.edu",
+  "password": "1234567812345678",
+  "email": "jdoe@umass.edu",
+  "role": "creator"
+}
+
+### Login User: John Doe
+# @name user
+POST {{host}}/api/user/login
+Content-Type: application/json
+Authorization: Bearer {{token}}
+Accept: application/json
+
+{
+  "username": "jdoe@umass.edu",
+  "password": "1234567812345678",
+  "email": "jdoe@umass.edu",
+  "role": "creator"
+}
+
+### Create artifact: Trail Camera
+# @name create_camera
+POST {{host}}/api/artifact/create
+Content-Type: application/json
+Authorization: Bearer {{token}}
+Accept: application/json
+
+{
+  "name": "Trail Camera",
+  "description": "Solar powered, motion-activated camera",
+  "location": { "lat": 42.391, "lon": -72.526, "alt": 92.5 },
+  "owner_id": {{user.response.body.$.id}}
+}
+
+### Create artifact: Spare Battery
+# @name create_battery
+POST {{host}}/api/artifact/create
+Content-Type: application/json
+Authorization: Bearer {{token}}
+Accept: application/json
+
+{
+  "name": "Spare Battery",
+  "description": "Lithium pack for the trail cam",
+  "location": { "lat": 42.392, "lon": -72.527 },
+  "parent_id": {{create_camera.response.body.$.id}}
+}
+
+### Get artifact by id (from the first create)
+GET {{host}}/api/artifact/{{create_camera.response.body.$.id}}
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### Get artifact by id (hardcoded example)
+GET {{host}}/api/artifact/3
+Authorization: Bearer {{token}}
+Accept: application/json

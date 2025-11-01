@@ -1,0 +1,307 @@
+###
+# FastAPI Authentication Demo - Lab 4 HTTP REST API Tests
+# 
+# This file contains HTTP requests to test all endpoints in the authentication system.
+# Use with VS Code REST Client extension or similar HTTP client tools.
+#
+# Test Sequence:
+# 1. Public endpoints (no auth required)
+# 2. Authentication (get token)
+# 3. Protected endpoints (auth required)
+#
+# Test User Credentials:
+# Username: johndoe
+# Password: secret
+###
+
+# Variables
+@baseUrl = http://localhost:8000
+@contentType = application/json
+
+###
+# =============================================================================
+# PUBLIC ENDPOINTS - No Authentication Required
+# =============================================================================
+
+### Test 1: Root endpoint - Welcome message
+GET {{baseUrl}}/
+Accept: {{contentType}}
+
+###
+### Test 2: Public API information
+GET {{baseUrl}}/public/info
+Accept: {{contentType}}
+
+###
+# =============================================================================
+# AUTHENTICATION ENDPOINTS
+# =============================================================================
+
+# About application/x-www-form-urlencoded:
+# This is a content type used for sending form data in HTTP requests.
+# It encodes data as key=value pairs separated by & symbols, like:
+# username=johndoe&password=secret
+# 
+# This is the same format used by HTML forms with method="POST".
+# Special characters are URL-encoded (spaces become %20, etc.).
+# 
+# FastAPI's OAuth2PasswordRequestForm expects this format for login requests,
+# which is the standard for OAuth2 authentication flows.
+
+### Test 3: Login with valid credentials - Get JWT token
+POST {{baseUrl}}/token
+Content-Type: application/x-www-form-urlencoded
+
+username=johndoe&password=secret
+
+###
+### Test 4: Login with invalid username
+POST {{baseUrl}}/token
+Content-Type: application/x-www-form-urlencoded
+
+username=invaliduser&password=secret
+
+###
+### Test 5: Login with invalid password
+POST {{baseUrl}}/token
+Content-Type: application/x-www-form-urlencoded
+
+username=johndoe&password=wrongpassword
+
+###
+### Test 6: Login with missing credentials
+POST {{baseUrl}}/token
+Content-Type: application/x-www-form-urlencoded
+
+###
+# =============================================================================
+# PROTECTED ENDPOINTS - Authentication Required
+# Note: Replace YOUR_JWT_TOKEN with actual token from successful login
+# =============================================================================
+
+### Test 7: Get current user profile (requires valid token)
+GET {{baseUrl}}/users/me
+Authorization: Bearer YOUR_JWT_TOKEN
+Accept: {{contentType}}
+
+###
+### Test 8: Get current user's items (requires valid token)
+GET {{baseUrl}}/users/me/items/
+Authorization: Bearer YOUR_JWT_TOKEN
+Accept: {{contentType}}
+
+###
+### Test 9: Get extended user profile (requires valid token)
+GET {{baseUrl}}/users/me/profile/extended
+Authorization: Bearer YOUR_JWT_TOKEN
+Accept: {{contentType}}
+
+###
+### Test 10: Access protected endpoint with invalid token
+GET {{baseUrl}}/users/me
+Authorization: Bearer invalid_token_here
+Accept: {{contentType}}
+
+###
+### Test 11: Access protected endpoint without token
+GET {{baseUrl}}/users/me
+Accept: {{contentType}}
+
+###
+### Test 12: Access protected endpoint with malformed token
+GET {{baseUrl}}/users/me
+Authorization: Bearer malformed.jwt.token
+Accept: {{contentType}}
+
+###
+# =============================================================================
+# AUTOMATED TEST SEQUENCE WITH TOKEN EXTRACTION
+# Note: Some HTTP clients support variable extraction from responses
+# =============================================================================
+
+### Step 1: Login and extract token (for clients that support it)
+# @name login
+POST {{baseUrl}}/token
+Content-Type: application/x-www-form-urlencoded
+
+username=johndoe&password=secret
+
+###
+### Step 2: Use extracted token for protected requests
+# Note: This syntax works with VS Code REST Client extension
+GET {{baseUrl}}/users/me
+Authorization: Bearer {{login.response.body.access_token}}
+Accept: {{contentType}}
+
+###
+### Step 3: Get user items with extracted token
+GET {{baseUrl}}/users/me/items/
+Authorization: Bearer {{login.response.body.access_token}}
+Accept: {{contentType}}
+
+###
+### Step 4: Get extended profile with extracted token
+GET {{baseUrl}}/users/me/profile/extended
+Authorization: Bearer {{login.response.body.access_token}}
+Accept: {{contentType}}
+
+###
+# =============================================================================
+# ERROR HANDLING TESTS
+# =============================================================================
+
+### Test 13: Test non-existent endpoint
+GET {{baseUrl}}/nonexistent
+Accept: {{contentType}}
+
+###
+### Test 14: Test wrong HTTP method on token endpoint
+GET {{baseUrl}}/token
+Accept: {{contentType}}
+
+###
+### Test 15: Test wrong HTTP method on protected endpoint
+POST {{baseUrl}}/users/me
+Authorization: Bearer {{login.response.body.access_token}}
+Content-Type: {{contentType}}
+
+{}
+
+###
+# =============================================================================
+# PERFORMANCE AND LOAD TESTS
+# =============================================================================
+
+### Test 16: Multiple rapid requests to public endpoint
+GET {{baseUrl}}/public/info
+Accept: {{contentType}}
+
+###
+GET {{baseUrl}}/public/info
+Accept: {{contentType}}
+
+###
+GET {{baseUrl}}/public/info
+Accept: {{contentType}}
+
+###
+### Test 17: Multiple authentication attempts
+POST {{baseUrl}}/token
+Content-Type: application/x-www-form-urlencoded
+
+username=johndoe&password=secret
+
+###
+POST {{baseUrl}}/token
+Content-Type: application/x-www-form-urlencoded
+
+username=johndoe&password=secret
+
+###
+# =============================================================================
+# DOCUMENTATION TESTS
+# =============================================================================
+
+### Test 18: OpenAPI JSON schema
+GET {{baseUrl}}/openapi.json
+Accept: {{contentType}}
+
+###
+### Test 19: Swagger UI (will return HTML)
+GET {{baseUrl}}/docs
+Accept: text/html
+
+###
+### Test 20: ReDoc documentation (will return HTML)
+GET {{baseUrl}}/redoc
+Accept: text/html
+
+###
+# =============================================================================
+# SECURITY TESTS
+# =============================================================================
+
+### Test 21: Test with expired token (simulate)
+GET {{baseUrl}}/users/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb2huZG9lIiwiZXhwIjoxNjA5NDU5MjAwfQ.expired_token_signature
+Accept: {{contentType}}
+
+###
+### Test 22: Test with token for different user (if you had multiple users)
+GET {{baseUrl}}/users/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJvdGhlcnVzZXIiLCJleHAiOjk5OTk5OTk5OTl9.fake_signature
+Accept: {{contentType}}
+
+###
+### Test 23: Test SQL injection attempt (should be safely handled)
+POST {{baseUrl}}/token
+Content-Type: application/x-www-form-urlencoded
+
+username='; DROP TABLE users; --&password=secret
+
+###
+### Test 24: Test XSS attempt in username
+POST {{baseUrl}}/token
+Content-Type: application/x-www-form-urlencoded
+
+username=<script>alert('xss')</script>&password=secret
+
+###
+# =============================================================================
+# EDGE CASES
+# =============================================================================
+
+### Test 25: Very long username
+POST {{baseUrl}}/token
+Content-Type: application/x-www-form-urlencoded
+
+username=verylongusernamethatexceedsnormallimitsandmightcauseissuesifnothandledproperly&password=secret
+
+###
+### Test 26: Empty request body
+POST {{baseUrl}}/token
+Content-Type: application/x-www-form-urlencoded
+
+###
+### Test 27: Special characters in credentials
+POST {{baseUrl}}/token
+Content-Type: application/x-www-form-urlencoded
+
+username=user@domain.com&password=pass!@#$%^&*()
+
+###
+### Test 28: Unicode characters
+POST {{baseUrl}}/token
+Content-Type: application/x-www-form-urlencoded
+
+username=测试用户&password=密码
+
+###
+# =============================================================================
+# INSTRUCTIONS FOR USE
+# =============================================================================
+
+# To use this file:
+# 1. Start the FastAPI application: python main.py
+# 2. Open this file in VS Code with REST Client extension
+# 3. Click "Send Request" above each ### separator
+# 4. For protected endpoints, first run the login request to get a token
+# 5. Replace YOUR_JWT_TOKEN with the actual token from login response
+# 6. Or use the automated sequence with token extraction
+#
+# Expected Results:
+# - Public endpoints (Tests 1-2): Should return 200 OK
+# - Valid login (Test 3): Should return 200 with access_token
+# - Invalid login (Tests 4-6): Should return 401 Unauthorized
+# - Protected with valid token (Tests 7-9): Should return 200 OK
+# - Protected without/invalid token (Tests 10-12): Should return 401 Unauthorized
+# - Error cases (Tests 13-15): Should return appropriate error codes
+# - Security tests (Tests 21-24): Should be safely handled
+#
+# This comprehensive test suite covers:
+# ✓ All API endpoints
+# ✓ Authentication flows
+# ✓ Authorization checks
+# ✓ Error handling
+# ✓ Security considerations
+# ✓ Edge cases

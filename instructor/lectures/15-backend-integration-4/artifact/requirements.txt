@@ -1,0 +1,8 @@
+email-validator==2.3.0
+fastapi==0.118.3
+fastjsonschema==2.21.2
+httpx==0.28.1
+pydantic==2.12.0
+sqlmodel==0.0.27
+uvicorn==0.37.0
+psycopg2-binary==2.9.11

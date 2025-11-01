@@ -1,0 +1,9 @@
+<!-- products.html -->
+<h1>Our Products</h1>
+{% for product in products %}
+    <div class="product">
+        <h2>{{ product.name|upper }}</h2>
+        <p>Price: ${{ product.price|round(2) }}</p>
+        <p>{{ product.description|truncate(50) }}</p>
+    </div>
+{% endfor %}

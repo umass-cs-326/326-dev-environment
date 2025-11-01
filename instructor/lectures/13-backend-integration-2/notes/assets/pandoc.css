@@ -1,0 +1,74 @@
+html {
+  font-family:
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+}
+body {
+  max-width: 70ch;
+  margin: 2rem auto;
+  line-height: 1.6;
+  padding: 0 1rem;
+}
+h1,
+h2,
+h3 {
+  line-height: 1.25;
+  margin-top: 2rem;
+}
+img,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+code,
+pre {
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+pre {
+  overflow: auto;
+  padding: 0.75rem 1rem;
+  background: #f6f8fa;
+  border-radius: 8px;
+}
+table {
+  border-collapse: collapse;
+}
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 0.5rem 0.75rem;
+}
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+img[src$=".svg"] {
+  max-width: 40%;
+  height: auto;
+}
+
+blockquote {
+  background-color: #f9f9f9; /* Light grey background */
+  border-left: 5px solid #ccc; /* A solid grey border on the left */
+  margin: 1.5em 10px; /* Some margin for spacing */
+  padding: 0.5em 10px; /* Padding inside the quote */
+  font-style: italic; /* Italicize the text */
+  color: #555; /* A slightly darker text color */
+}
+
+/* Optional: Style the citation/author */
+blockquote footer {
+  color: #777;
+  font-style: normal;
+  text-align: right;
+  margin-top: 0.5em;
+}

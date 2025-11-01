@@ -1,0 +1,109 @@
+{
+  "output": "[launcher] uvicorn starting...\n2025-10-25 13:51:42,303 INFO sqlalchemy.engine.Engine select pg_catalog.version()\n2025-10-25 13:51:42,304 INFO sqlalchemy.engine.Engine [raw sql] {}\n2025-10-25 13:51:42,317 INFO sqlalchemy.engine.Engine select current_schema()\n2025-10-25 13:51:42,317 INFO sqlalchemy.engine.Engine [raw sql] {}\n2025-10-25 13:51:42,320 INFO sqlalchemy.engine.Engine show standard_conforming_strings\n2025-10-25 13:51:42,320 INFO sqlalchemy.engine.Engine [raw sql] {}\n2025-10-25 13:51:42,341 INFO sqlalchemy.engine.Engine BEGIN (implicit)\n2025-10-25 13:51:42,351 INFO sqlalchemy.engine.Engine SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR\n2025-10-25 13:51:42,351 INFO sqlalchemy.engine.Engine [generated in 0.00048s] {'table_name': 'author', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}\n2025-10-25 13:51:42,367 INFO sqlalchemy.engine.Engine SELECT pg_catalog.pg_class.relname \nFROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace \nWHERE pg_catalog.pg_class.relname = %(table_name)s::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s::VARCHAR, %(param_2)s::VARCHAR, %(param_3)s::VARCHAR, %(param_4)s::VARCHAR, %(param_5)s::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s::VARCHAR\n2025-10-25 13:51:42,367 INFO sqlalchemy.engine.Engine [cached since 0.01671s ago] {'table_name': 'book', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}\n2025-10-25 13:51:42,370 INFO sqlalchemy.engine.Engine \nCREATE TABLE author (\n\tid SERIAL NOT NULL, \n\tname VARCHAR NOT NULL, \n\temail VARCHAR NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (email)\n)\n\n\n2025-10-25 13:51:42,371 INFO sqlalchemy.engine.Engine [no key 0.00020s] {}\n2025-10-25 13:51:42,413 INFO sqlalchemy.engine.Engine \nCREATE TABLE book (\n\tid SERIAL NOT NULL, \n\ttitle VARCHAR NOT NULL, \n\tyear INTEGER NOT NULL, \n\tauthor_id INTEGER NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(author_id) REFERENCES author (id)\n)\n\n\n2025-10-25 13:51:42,413 INFO sqlalchemy.engine.Engine [no key 0.00026s] {}\n2025-10-25 13:51:42,421 INFO sqlalchemy.engine.Engine COMMIT\n\u001b[32mINFO\u001b[0m:     Started server process [\u001b[36m141\u001b[0m]\n\u001b[32mINFO\u001b[0m:     Waiting for application startup.\n\u001b[32mINFO\u001b[0m:     Application startup complete.\n\u001b[32mINFO\u001b[0m:     Uvicorn running on \u001b[1mhttp://0.0.0.0:8000\u001b[0m (Press CTRL+C to quit)\n2025-10-25 13:51:45,456 INFO sqlalchemy.engine.Engine BEGIN (implicit)\n2025-10-25 13:51:45,459 INFO sqlalchemy.engine.Engine INSERT INTO author (name, email) VALUES (%(name)s::VARCHAR, %(email)s::VARCHAR) RETURNING author.id\n2025-10-25 13:51:45,459 INFO sqlalchemy.engine.Engine [generated in 0.00035s] {'name': 'Test Author', 'email': 'test@example.com'}\n2025-10-25 13:51:45,467 INFO sqlalchemy.engine.Engine COMMIT\n2025-10-25 13:51:45,469 INFO sqlalchemy.engine.Engine BEGIN (implicit)\n2025-10-25 13:51:45,473 INFO sqlalchemy.engine.Engine SELECT author.id, author.name, author.email \nFROM author \nWHERE author.id = %(pk_1)s::INTEGER\n2025-10-25 13:51:45,473 INFO sqlalchemy.engine.Engine [generated in 0.00030s] {'pk_1': 1}\n2025-10-25 13:51:45,476 INFO sqlalchemy.engine.Engine ROLLBACK\n\u001b[32mINFO\u001b[0m:     127.0.0.1:40862 - \"\u001b[1mPOST /authors/ HTTP/1.1\u001b[0m\" \u001b[32m200 OK\u001b[0m\n2025-10-25 13:51:45,486 INFO sqlalchemy.engine.Engine BEGIN (implicit)\n2025-10-25 13:51:45,489 INFO sqlalchemy.engine.Engine SELECT author.id, author.name, author.email \nFROM author\n2025-10-25 13:51:45,489 INFO sqlalchemy.engine.Engine [generated in 0.00024s] {}\n2025-10-25 13:51:45,491 INFO sqlalchemy.engine.Engine ROLLBACK\n\u001b[32mINFO\u001b[0m:     127.0.0.1:40862 - \"\u001b[1mGET /authors/ HTTP/1.1\u001b[0m\" \u001b[32m200 OK\u001b[0m\n2025-10-25 13:51:45,496 INFO sqlalchemy.engine.Engine BEGIN (implicit)\n2025-10-25 13:51:45,497 INFO sqlalchemy.engine.Engine SELECT author.id AS author_id, author.name AS author_name, author.email AS author_email \nFROM author \nWHERE author.id = %(pk_1)s::INTEGER\n2025-10-25 13:51:45,497 INFO sqlalchemy.engine.Engine [generated in 0.00024s] {'pk_1': 1}\n2025-10-25 13:51:45,499 INFO sqlalchemy.engine.Engine ROLLBACK\n\u001b[32mINFO\u001b[0m:     127.0.0.1:40862 - \"\u001b[1mGET /authors/1 HTTP/1.1\u001b[0m\" \u001b[32m200 OK\u001b[0m\n2025-10-25 13:51:45,505 INFO sqlalchemy.engine.Engine BEGIN (implicit)\n2025-10-25 13:51:45,505 INFO sqlalchemy.engine.Engine SELECT author.id AS author_id, author.name AS author_name, author.email AS author_email \nFROM author \nWHERE author.id = %(pk_1)s::INTEGER\n2025-10-25 13:51:45,505 INFO sqlalchemy.engine.Engine [cached since 0.007985s ago] {'pk_1': 1}\n2025-10-25 13:51:45,509 INFO sqlalchemy.engine.Engine UPDATE author SET name=%(name)s::VARCHAR WHERE author.id = %(author_id)s::INTEGER\n2025-10-25 13:51:45,509 INFO sqlalchemy.engine.Engine [generated in 0.00026s] {'name': 'Updated Author', 'author_id': 1}\n2025-10-25 13:51:45,513 INFO sqlalchemy.engine.Engine COMMIT\n2025-10-25 13:51:45,514 INFO sqlalchemy.engine.Engine BEGIN (implicit)\n2025-10-25 13:51:45,515 INFO sqlalchemy.engine.Engine SELECT author.id, author.name, author.email \nFROM author \nWHERE author.id = %(pk_1)s::INTEGER\n2025-10-25 13:51:45,515 INFO sqlalchemy.engine.Engine [cached since 0.04233s ago] {'pk_1': 1}\n2025-10-25 13:51:45,516 INFO sqlalchemy.engine.Engine ROLLBACK\n\u001b[32mINFO\u001b[0m:     127.0.0.1:40862 - \"\u001b[1mPATCH /authors/1 HTTP/1.1\u001b[0m\" \u001b[32m200 OK\u001b[0m\n2025-10-25 13:51:45,522 INFO sqlalchemy.engine.Engine BEGIN (implicit)\n2025-10-25 13:51:45,522 INFO sqlalchemy.engine.Engine SELECT author.id AS author_id, author.name AS author_name, author.email AS author_email \nFROM author \nWHERE author.id = %(pk_1)s::INTEGER\n2025-10-25 13:51:45,523 INFO sqlalchemy.engine.Engine [cached since 0.0254s ago] {'pk_1': 1}\n2025-10-25 13:51:45,526 INFO sqlalchemy.engine.Engine INSERT INTO book (title, year, author_id) VALUES (%(title)s::VARCHAR, %(year)s::INTEGER, %(author_id)s::INTEGER) RETURNING book.id\n2025-10-25 13:51:45,526 INFO sqlalchemy.engine.Engine [generated in 0.00027s] {'title': 'Test Book', 'year': 2020, 'author_id': 1}\n2025-10-25 13:51:45,531 INFO sqlalchemy.engine.Engine COMMIT\n2025-10-25 13:51:45,532 INFO sqlalchemy.engine.Engine BEGIN (implicit)\n2025-10-25 13:51:45,534 INFO sqlalchemy.engine.Engine SELECT book.id, book.title, book.year, book.author_id \nFROM book \nWHERE book.id = %(pk_1)s::INTEGER\n2025-10-25 13:51:45,534 INFO sqlalchemy.engine.Engine [generated in 0.00025s] {'pk_1': 1}\n2025-10-25 13:51:45,536 INFO sqlalchemy.engine.Engine ROLLBACK\n\u001b[32mINFO\u001b[0m:     127.0.0.1:40862 - \"\u001b[1mPOST /books/ HTTP/1.1\u001b[0m\" \u001b[32m200 OK\u001b[0m\n2025-10-25 13:51:45,540 INFO sqlalchemy.engine.Engine BEGIN (implicit)\n2025-10-25 13:51:45,541 INFO sqlalchemy.engine.Engine SELECT book.id, book.title, book.year, book.author_id \nFROM book\n2025-10-25 13:51:45,541 INFO sqlalchemy.engine.Engine [generated in 0.00024s] {}\n2025-10-25 13:51:45,543 INFO sqlalchemy.engine.Engine ROLLBACK\n\u001b[32mINFO\u001b[0m:     127.0.0.1:40862 - \"\u001b[1mGET /books/ HTTP/1.1\u001b[0m\" \u001b[32m200 OK\u001b[0m\n2025-10-25 13:51:45,548 INFO sqlalchemy.engine.Engine BEGIN (implicit)\n2025-10-25 13:51:45,549 INFO sqlalchemy.engine.Engine SELECT book.id AS book_id, book.title AS book_title, book.year AS book_year, book.author_id AS book_author_id \nFROM book \nWHERE book.id = %(pk_1)s::INTEGER\n2025-10-25 13:51:45,549 INFO sqlalchemy.engine.Engine [generated in 0.00025s] {'pk_1': 1}\n2025-10-25 13:51:45,552 INFO sqlalchemy.engine.Engine ROLLBACK\n\u001b[32mINFO\u001b[0m:     127.0.0.1:40862 - \"\u001b[1mGET /books/1 HTTP/1.1\u001b[0m\" \u001b[32m200 OK\u001b[0m\n2025-10-25 13:51:45,556 INFO sqlalchemy.engine.Engine BEGIN (implicit)\n2025-10-25 13:51:45,557 INFO sqlalchemy.engine.Engine SELECT book.id, book.title, book.year, book.author_id \nFROM book \nWHERE book.author_id = %(author_id_1)s::INTEGER\n2025-10-25 13:51:45,558 INFO sqlalchemy.engine.Engine [generated in 0.00026s] {'author_id_1': 1}\n2025-10-25 13:51:45,559 INFO sqlalchemy.engine.Engine ROLLBACK\n\u001b[32mINFO\u001b[0m:     127.0.0.1:40862 - \"\u001b[1mGET /books/by-author/1 HTTP/1.1\u001b[0m\" \u001b[32m200 OK\u001b[0m\n2025-10-25 13:51:45,564 INFO sqlalchemy.engine.Engine BEGIN (implicit)\n2025-10-25 13:51:45,565 INFO sqlalchemy.engine.Engine SELECT book.id AS book_id, book.title AS book_title, book.year AS book_year, book.author_id AS book_author_id \nFROM book \nWHERE book.id = %(pk_1)s::INTEGER\n2025-10-25 13:51:45,565 INFO sqlalchemy.engine.Engine [cached since 0.0158s ago] {'pk_1': 1}\n2025-10-25 13:51:45,568 INFO sqlalchemy.engine.Engine UPDATE book SET title=%(title)s::VARCHAR WHERE book.id = %(book_id)s::INTEGER\n2025-10-25 13:51:45,568 INFO sqlalchemy.engine.Engine [generated in 0.00024s] {'title': 'Updated Book', 'book_id': 1}\n2025-10-25 13:51:45,570 INFO sqlalchemy.engine.Engine COMMIT\n2025-10-25 13:51:45,571 INFO sqlalchemy.engine.Engine BEGIN (implicit)\n2025-10-25 13:51:45,571 INFO sqlalchemy.engine.Engine SELECT book.id, book.title, book.year, book.author_id \nFROM book \nWHERE book.id = %(pk_1)s::INTEGER\n2025-10-25 13:51:45,571 INFO sqlalchemy.engine.Engine [cached since 0.03757s ago] {'pk_1': 1}\n2025-10-25 13:51:45,573 INFO sqlalchemy.engine.Engine ROLLBACK\n\u001b[32mINFO\u001b[0m:     127.0.0.1:40862 - \"\u001b[1mPATCH /books/1 HTTP/1.1\u001b[0m\" \u001b[32m200 OK\u001b[0m\n2025-10-25 13:51:45,578 INFO sqlalchemy.engine.Engine BEGIN (implicit)\n2025-10-25 13:51:45,578 INFO sqlalchemy.engine.Engine SELECT book.id AS book_id, book.title AS book_title, book.year AS book_year, book.author_id AS book_author_id \nFROM book \nWHERE book.id = %(pk_1)s::INTEGER\n2025-10-25 13:51:45,578 INFO sqlalchemy.engine.Engine [cached since 0.02922s ago] {'pk_1': 1}\n2025-10-25 13:51:45,582 INFO sqlalchemy.engine.Engine DELETE FROM book WHERE book.id = %(id)s::INTEGER\n2025-10-25 13:51:45,582 INFO sqlalchemy.engine.Engine [generated in 0.00025s] {'id': 1}\n2025-10-25 13:51:45,583 INFO sqlalchemy.engine.Engine COMMIT\n\u001b[32mINFO\u001b[0m:     127.0.0.1:40862 - \"\u001b[1mDELETE /books/1 HTTP/1.1\u001b[0m\" \u001b[32m200 OK\u001b[0m\n2025-10-25 13:51:45,588 INFO sqlalchemy.engine.Engine BEGIN (implicit)\n2025-10-25 13:51:45,589 INFO sqlalchemy.engine.Engine SELECT author.id AS author_id, author.name AS author_name, author.email AS author_email \nFROM author \nWHERE author.id = %(pk_1)s::INTEGER\n2025-10-25 13:51:45,589 INFO sqlalchemy.engine.Engine [cached since 0.0917s ago] {'pk_1': 1}\n2025-10-25 13:51:45,591 INFO sqlalchemy.engine.Engine DELETE FROM author WHERE author.id = %(id)s::INTEGER\n2025-10-25 13:51:45,591 INFO sqlalchemy.engine.Engine [generated in 0.00023s] {'id': 1}\n2025-10-25 13:51:45,593 INFO sqlalchemy.engine.Engine COMMIT\n\u001b[32mINFO\u001b[0m:     127.0.0.1:40862 - \"\u001b[1mDELETE /authors/1 HTTP/1.1\u001b[0m\" \u001b[32m200 OK\u001b[0m\n2025-10-25 13:51:45,598 INFO sqlalchemy.engine.Engine BEGIN (implicit)\n2025-10-25 13:51:45,599 INFO sqlalchemy.engine.Engine DELETE FROM book\n2025-10-25 13:51:45,599 INFO sqlalchemy.engine.Engine [generated in 0.00024s] {}\n2025-10-25 13:51:45,601 INFO sqlalchemy.engine.Engine DELETE FROM author\n2025-10-25 13:51:45,601 INFO sqlalchemy.engine.Engine [generated in 0.00020s] {}\n2025-10-25 13:51:45,602 INFO sqlalchemy.engine.Engine COMMIT\n\u001b[32mINFO\u001b[0m:     127.0.0.1:40862 - \"\u001b[1mDELETE /reset/ HTTP/1.1\u001b[0m\" \u001b[32m200 OK\u001b[0m\n\u001b[32mINFO\u001b[0m:     Shutting down\n\u001b[32mINFO\u001b[0m:     Waiting for application shutdown.\n\u001b[32mINFO\u001b[0m:     Application shutdown complete.\n\u001b[32mINFO\u001b[0m:     Finished server process [\u001b[36m141\u001b[0m]\n",
+  "tests": [
+    {
+      "name": "File Structure",
+      "max_score": 5,
+      "score": 5,
+      "output": "All required files present"
+    },
+    {
+      "name": "Model Imports",
+      "max_score": 10,
+      "score": 10,
+      "output": "Models imported successfully"
+    },
+    {
+      "name": "Author Model Fields",
+      "max_score": 5,
+      "score": 5,
+      "output": "Author model has all required fields"
+    },
+    {
+      "name": "Book Model Fields",
+      "max_score": 5,
+      "score": 5,
+      "output": "Book model has all required fields"
+    },
+    {
+      "name": "Server Startup",
+      "max_score": 5,
+      "score": 5,
+      "output": "FastAPI server started successfully"
+    },
+    {
+      "name": "POST /authors/",
+      "max_score": 5,
+      "score": 5,
+      "output": "Author created successfully"
+    },
+    {
+      "name": "GET /authors/",
+      "max_score": 5,
+      "score": 5,
+      "output": "Authors retrieved successfully"
+    },
+    {
+      "name": "GET /authors/{id}",
+      "max_score": 5,
+      "score": 5,
+      "output": "Author retrieved by ID"
+    },
+    {
+      "name": "PATCH /authors/{id}",
+      "max_score": 5,
+      "score": 5,
+      "output": "Author updated successfully"
+    },
+    {
+      "name": "POST /books/",
+      "max_score": 8,
+      "score": 8,
+      "output": "Book created successfully"
+    },
+    {
+      "name": "GET /books/",
+      "max_score": 7,
+      "score": 7,
+      "output": "Books retrieved successfully"
+    },
+    {
+      "name": "GET /books/{id}",
+      "max_score": 5,
+      "score": 5,
+      "output": "Book retrieved by ID"
+    },
+    {
+      "name": "GET /books/by-author/{id}",
+      "max_score": 5,
+      "score": 5,
+      "output": "Books by author retrieved"
+    },
+    {
+      "name": "PATCH /books/{id}",
+      "max_score": 5,
+      "score": 5,
+      "output": "Book updated successfully"
+    },
+    {
+      "name": "DELETE /books/{id}",
+      "max_score": 5,
+      "score": 5,
+      "output": "Book deleted successfully"
+    },
+    {
+      "name": "DELETE /authors/{id}",
+      "max_score": 5,
+      "score": 5,
+      "output": "Author deleted successfully"
+    },
+    {
+      "name": "DELETE /reset/",
+      "max_score": 10,
+      "score": 10,
+      "output": "Reset endpoint works correctly"
+    }
+  ],
+  "score": 100.0,
+  "max_score": 100.0
+}

@@ -1,0 +1,22 @@
+# Requirements for FastAPI Authentication Demo
+
+# Modern, fast web framework for building APIs
+fastapi==0.104.1
+
+# ASGI web server for running FastAPI applications
+uvicorn[standard]==0.24.0
+
+# JSON Web Token (JWT) library for authentication
+python-jose[cryptography]==3.3.0
+
+# Password hashing library with bcrypt support
+passlib[bcrypt]==1.7.4
+
+# Multipart form data parsing for file uploads
+python-multipart==0.0.6
+
+# Strong password hashing function
+bcrypt<4.0.0
+
+# HTTP library for making requests
+requests

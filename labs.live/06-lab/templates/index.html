@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Example</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+  </head>
+  <body>
+    <h1>User Profile</h1>
+    <p>Name: {{ user.name }}</p>
+    
+    {% if user.age >= 18 %}
+        <p>Age: {{ user.age }} (Adult)</p>
+    {% else %}
+        <p>Age: {{ user.age }} (Minor)</p>
+    {% endif %}
+    
+    {# This is a comment - it won't be rendered #}
+    
+    <h2>Hobbies:</h2>
+    <ul>
+    {% for hobby in user.hobbies %}
+        <li>{{ hobby }}</li>
+    {% endfor %}
+    </ul>
+  </body>
+</html>
